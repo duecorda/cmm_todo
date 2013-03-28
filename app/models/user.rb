@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
 
-  attr_accessible :login, :password, :password_confirmation, :name, :salt
+  attr_accessible :login, :password, :password_confirmation, :name
   attr_accessor :password_confirmation
 
   validates_uniqueness_of :login
@@ -10,9 +10,7 @@ class User < ActiveRecord::Base
 
   before_save :salting_password
 
-
   def self.authenticate(_login, _password)
-    #User.find_by_login_and_password(_login, _password)
     u = find_by_login(_login)
     u && u.password == Digest::SHA1.hexdigest("#{_password}:#{u.salt}") ? u: nil
   end
